@@ -6,7 +6,6 @@ using System.IO;
 namespace Information_Security_Password_Cracking_Tool {
     static class Generator {
         private static Random randomSalt = new Random();
-        private static SHA256 hasher = SHA256.Create();
         public static void generateAndWrite(string username, string password, string path) {
             var salt = getSalt(32);
             var hash = getHash(password + salt);
@@ -22,7 +21,8 @@ namespace Information_Security_Password_Cracking_Tool {
             return salt;
         }
         private static string getHash(string text) {
-            return Convert.ToBase64String(hasher.ComputeHash(Encoding.ASCII.GetBytes(text)));
+            using (var hasher = SHA256.Create())
+                return BitConverter.ToString(hasher.ComputeHash(Encoding.ASCII.GetBytes(text))).Replace("-", "").ToLower();
         }
     }
 }

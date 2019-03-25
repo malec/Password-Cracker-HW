@@ -1,0 +1,23 @@
+{
+  "profiles": {
+    "Information Security Password Cracking Tool": {
+      "commandName": "Project"
+    },
+    "part1": {
+      "commandName": "Project",
+      "commandLineArgs": "1 alec asdf"
+    },
+    "part2": {
+      "commandName": "Project",
+      "commandLineArgs": "2 alec asDf"
+    },
+    "part3": {
+      "commandName": "Project",
+      "commandLineArgs": "3 alec Hi2"
+    },
+    "part4": {
+      "commandName": "Project",
+      "commandLineArgs": "4 alec $al3#"
+    }
+  }
+}

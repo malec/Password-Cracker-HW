@@ -33,12 +33,12 @@ namespace Information_Security_Password_Cracking_Tool {
             int part;
             string username;
             string password;
-
 #if DEBUG
             Console.WriteLine($"Part: {args[0]} username: {args[1]} password: {args[2]}");
 #endif
+
             try {
-                Int32.TryParse(args[0], out part);
+                part = Int32.Parse(args[0]);
                 username = args[1];
                 password = args[2];
                 switch (part) {
@@ -72,6 +72,8 @@ namespace Information_Security_Password_Cracking_Tool {
                 Console.WriteLine(e.Message);
                 Console.WriteLine("Press any key to exit");
                 Console.ReadKey();
+            } catch (FormatException e) {
+                Console.WriteLine("Part number not in correct format");
             }
         }
     }

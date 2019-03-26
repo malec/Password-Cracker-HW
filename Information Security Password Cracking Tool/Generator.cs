@@ -4,19 +4,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 
-namespace Information_Security_Password_Cracking_Tool {
-    static class Generator {
+namespace Generator {
+    public static class Generator {
         private static Random randomSalt = new Random();
         private static string part1Regex = "^([a-z]){2,5}$";
         private static string part2Regex = "^([a-z]|[A-Z]){2,5}$";
         private static string part3Regex = "^([a-z]|[A-Z]|[0-9]){2,5}$";
         private static string part4Regex = "^.{2,5}$";
-        public static void generateAndWrite(string username, string password, string path) {
-            var salt = getSalt(32);
-            var hash = getHash(password + salt);
-            var result = $"[{username}, {salt}, {hash}]";
-            File.WriteAllText(path, result.ToString());
-        }
         private static string getSalt(int length) {
             var salt = "";
             for (int i = 0; i < length; i++) {
@@ -25,22 +19,17 @@ namespace Information_Security_Password_Cracking_Tool {
             }
             return salt;
         }
-        private static string getHash(string text) {
+        public static string hash(string text) {
             using (var hasher = SHA256.Create())
                 return BitConverter.ToString(hasher.ComputeHash(Encoding.ASCII.GetBytes(text))).Replace("-", "").ToLower();
         }
-        static void Main(String[] args) {
-            int part;
-            string username;
-            string password;
-#if DEBUG
-            Console.WriteLine($"Part: {args[0]} username: {args[1]} password: {args[2]}");
-#endif
+        public static void generateAndWrite(string _part, string username, string password) {
 
+#if DEBUG
+            Console.WriteLine($"Part: {_part} username: {username} password: {password}");
+#endif
             try {
-                part = Int32.Parse(args[0]);
-                username = args[1];
-                password = args[2];
+                int part = Int32.Parse(_part);
                 switch (part) {
                     case 1:
                         if (!Regex.IsMatch(password, part1Regex)) {
@@ -65,7 +54,10 @@ namespace Information_Security_Password_Cracking_Tool {
                     default:
                         throw new FormatException("Part number is invalid");
                 }
-                Generator.generateAndWrite(username, password, $"./output{part}.txt");
+                var salt = getSalt(32);
+                var hash = Generator.hash(password + salt);
+                var result = $"[{username}, {salt}, {hash}]";
+                File.WriteAllText($"./part{part}.txt", result.ToString());
             } catch (IndexOutOfRangeException e) {
                 Console.WriteLine("args should be <part number> <username> <password>");
             } catch (AhlFormatException e) {
@@ -75,6 +67,12 @@ namespace Information_Security_Password_Cracking_Tool {
             } catch (FormatException e) {
                 Console.WriteLine("Part number not in correct format");
             }
+        }
+        static void Main(String[] args) {
+            string part = args[0];
+            string username = args[1]; 
+            string password = args[2];
+            generateAndWrite(part, username, password);
         }
     }
 }

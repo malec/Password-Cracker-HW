@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+﻿using Information_Security_Password_Cracking_Tool;
+using System;
 
 namespace Demo {
     class Program {
@@ -40,5 +42,8 @@ namespace Demo {
                 }
                 Generator.generateAndWrite(username, password, $"./output{part}.txt");
             }
+            Generator.generateAndWrite(args[0], args[1], args[2]);
+            Console.WriteLine(Cracker.Crack(args[0]));
+        }
     }
 }

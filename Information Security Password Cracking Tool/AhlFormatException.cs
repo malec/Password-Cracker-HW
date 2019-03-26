@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Information_Security_Password_Cracking_Tool {
+namespace Generator {
     class AhlFormatException : Exception {
         private static string baseMessage = "Password must be of format: length 2-5, ";
         public AhlFormatException(string message) : base(baseMessage + message) {

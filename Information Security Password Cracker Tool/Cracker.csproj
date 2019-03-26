@@ -4,6 +4,11 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>Information_Security_Password_Cracker_Tool</RootNamespace>
+    <StartupObject>Cracker.Cracker</StartupObject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Information Security Password Cracking Tool\Generator.csproj" />
+  </ItemGroup>
 
 </Project>

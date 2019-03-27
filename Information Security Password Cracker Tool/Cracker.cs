@@ -4,11 +4,7 @@ using System.IO;
 
 namespace Cracker {
     public class Cracker {
-        Cracker() {
-            part1Keys.Sort();
-            part2Keys.Sort();
-            part3Keys.Sort();
-            part4Keys.Sort();
+        public Cracker() {
         }
         static void Main(String[] args) {
             string part = args[0];
@@ -23,13 +19,22 @@ namespace Cracker {
                 if (!Int32.TryParse(_part, out part)) {
                     throw new Exception("Part number is invalid");
                 }
-                string fileName = $"part{part}";
+                string fileName = $"part{part}.txt";
                 string[] fileContents = File.ReadAllText(fileName).Trim('[', ']').Split(',');
                 string salt = fileContents[1];
                 string hash = fileContents[2];
                 string password = "";
-                while (Generator.Generator.hash(password + salt) != hash) {
-                    password = getNewPassword(part);
+                int maxCount = 0;
+                int minLength = 2;
+                int maxLength = 5;
+                List<int> currentIndicies = new List<int>();
+                maxCount = computeLength(charSet[part].Length, minLength, maxLength);
+                foreach (int key in charSet[part]) {
+                    currentIndicies.Add(0);
+                }
+                while ((Generator.Generator.hash(password + salt) != hash) || (tries <= maxCount)) {
+                    password = getNewPassword(password, part, currentIndicies);
+                    tries++;
                 }
             } catch (IndexOutOfRangeException e) {
                 Console.WriteLine("Provide a file crack via command line.");
@@ -46,33 +51,44 @@ namespace Cracker {
         private static string lowerCaseString = upperCaseString.ToLower();
         private static string numbers = "0123456789";
         private static string specials = "$#%&*()";
-        private static List<char> part1Keys= new List<char>(lowerCaseString.ToCharArray());
-        private static List<char> part2Keys = new List<char>((upperCaseString + lowerCaseString).ToCharArray());
-        private static List<char> part3Keys = new List<char>(numbers + upperCaseString + lowerCaseString);
-        private static List<char> part4Keys = new List<char>(specials + numbers + upperCaseString + lowerCaseString);
-
-        public string crackLowerCasePassword(string keys) {
+        private static char[] part1Keys = lowerCaseString.ToCharArray();
+        private static char[] part2Keys = (upperCaseString + lowerCaseString).ToCharArray();
+        private static char[] part3Keys = (numbers + upperCaseString + lowerCaseString).ToCharArray();
+        private static char[] part4Keys = (specials + numbers + upperCaseString + lowerCaseString).ToCharArray();
+        private static char[][] charSet = { part1Keys, part2Keys, part3Keys, part4Keys };
+        private string getNewPassword(string currentPassword, int part, List<int> currentIndicies) {
+            return recurseIncrement(currentPassword, part, currentIndicies, charSet[part - 1].Length - 1);
         }
-        private static string getNewPassword(string password, int part, int stop) {
-            if (password[password.Length] == ) {
+        private string recurseIncrement(string currentPassword, int part, List<int> currentIndicies, int index) {
+            if (currentPassword[currentIndicies[index]] != charSet[part - 1][charSet[part - 1].Length - 1]) {
+                currentIndicies[index]++;
+                string result = "";
+                foreach (int i in currentIndicies) {
+                    result += charSet[part - 1][index];
+                }
+                return result;
+            } else {
+                if (index == 0) {
+                    throw new OverflowException("Password " + currentPassword + " is overflowing");
+                } else {
+                    currentIndicies[index] = 0;
+                    index--;
+                    return recurseIncrement(currentPassword, part, currentIndicies, index);
+                }
+            }
+        }
+        private static int computeLength(int keysLength, int max, int min) {
+            int maxCount = 0;
+            for (int i = min; i <= max; i++) {
+                maxCount += (int)Math.Pow(keysLength, i);
+            }
+            return maxCount;
+        }
+        static int Fact(int n) {
+            if (n <= 1)
+                return 1;
+            return n * Fact(n - 1);
 
-            }
-            switch (part) {
-                case 1: {
-                        break;
-                    }
-                case 2: {
-                        break;
-                    }
-                case 3: {
-                        break;
-                    }
-                case 4: {
-                        break;
-                    }
-                default:
-                    return null;
-            }
         }
     }
 }

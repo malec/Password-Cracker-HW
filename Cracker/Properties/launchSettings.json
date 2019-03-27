@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Cracker": {
+      "commandName": "Project"
+    },
+    "part1": {
+      "commandName": "Project",
+      "commandLineArgs": "1"
+    }
+  }
+}

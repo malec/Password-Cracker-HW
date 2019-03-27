@@ -7,10 +7,10 @@ using System.IO;
 namespace Generator {
     public static class Generator {
         private static Random randomSalt = new Random();
-        private static string part1Regex = "^([a-z]){2,5}$";
-        private static string part2Regex = "^([a-z]|[A-Z]){2,5}$";
-        private static string part3Regex = "^([a-z]|[A-Z]|[0-9]){2,5}$";
-        private static string part4Regex = "^.{2,5}$";
+        public static string part1Regex = "^([a-z]){2,5}$";
+        public static string part2Regex = "^([a-z]|[A-Z]){2,5}$";
+        public static string part3Regex = "^([a-z]|[A-Z]|[0-9]){2,5}$";
+        public static string part4Regex = "^.{2,5}$";
         private static string getSalt(int length) {
             var salt = "";
             for (int i = 0; i < length; i++) {

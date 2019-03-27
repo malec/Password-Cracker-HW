@@ -1,5 +1,4 @@
 ﻿using System;
-using Generator;
 
 namespace Demo {
     class Program {

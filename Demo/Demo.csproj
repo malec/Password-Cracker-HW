@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Generator\Generator.csproj" />
     <ProjectReference Include="..\Information Security Password Cracker Tool\Cracker.csproj" />
-    <ProjectReference Include="..\Information Security Password Cracking Tool\Generator.csproj" />
   </ItemGroup>
 
 </Project>

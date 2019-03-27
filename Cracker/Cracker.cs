@@ -9,7 +9,7 @@ namespace Cracker {
             string part = args[0];
             Cracker cracker = new Cracker();
             Console.WriteLine("Cracking...");
-            var crackerResult = cracker.Crack(part);
+            var crackerResult = cracker.Crack(part, args[1]);
             Console.WriteLine("Done.");
             Console.WriteLine($"Password: {crackerResult.password}");
             Console.WriteLine($"Number of tries: {crackerResult.tries}.");
@@ -31,7 +31,7 @@ namespace Cracker {
                 this.timeSpan = _timeSpan;
             }
         }
-        public CrackResult Crack(string _part) {
+        public CrackResult Crack(string _part, String path) {
             var startTime = DateTime.Now;
             tries = 0;
             try {
@@ -39,8 +39,8 @@ namespace Cracker {
                 if (!Int32.TryParse(_part, out part)) {
                     throw new Exception("Part number is invalid");
                 }
-                string fileName = $"../../../../Generator/bin/Debug/netcoreapp2.1/part{part}.txt";
-                string[] fileContents = File.ReadAllText(fileName).Trim('[', ']').Split(',');
+                // string fileName = $"../../../../Generator/bin/Debug/netcoreapp2.1/part{part}.txt";
+                string[] fileContents = File.ReadAllText(path).Trim('[', ']').Split(',');
 
                 string salt = fileContents[1].Trim();
                 string hash = fileContents[2].Trim();

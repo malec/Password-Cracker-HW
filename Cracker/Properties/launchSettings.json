@@ -5,19 +5,19 @@
     },
     "part1": {
       "commandName": "Project",
-      "commandLineArgs": "1"
+      "commandLineArgs": "1 ../../../../Generator/bin/Debug/netcoreapp2.1/part1.txt"
     },
     "part2": {
       "commandName": "Project",
-      "commandLineArgs": "2"
+      "commandLineArgs": "2 ../../../../Generator/bin/Debug/netcoreapp2.1/part2.txt"
     },
     "part3": {
       "commandName": "Project",
-      "commandLineArgs": "3"
+      "commandLineArgs": "3 ../../../../Generator/bin/Debug/netcoreapp2.1/part3.txt"
     },
     "part4": {
       "commandName": "Project",
-      "commandLineArgs": "4"
+      "commandLineArgs": "4 ../../../../Generator/bin/Debug/netcoreapp2.1/part4.txt"
     }
   }
 }

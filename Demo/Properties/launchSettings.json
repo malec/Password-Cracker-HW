@@ -5,7 +5,19 @@
     },
     "part1": {
       "commandName": "Project",
-      "commandLineArgs": "1 alec test"
+      "commandLineArgs": "1 alec test ./part1.txt"
+    },
+    "part2": {
+      "commandName": "Project",
+      "commandLineArgs": "2 alec tEst ./part2.txt"
+    },
+    "part3": {
+      "commandName": "Project",
+      "commandLineArgs": "3 alec t3St ./part3.txt"
+    },
+    "part4": {
+      "commandName": "Project",
+      "commandLineArgs": "4 alec t3$t ./part4.txt"
     }
   }
 }

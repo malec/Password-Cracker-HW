@@ -6,15 +6,20 @@ namespace Demo {
             int part;
             string username;
             string password;
-#if DEBUG
-            Console.WriteLine($"Part: {args[0]} username: {args[1]} password: {args[2]}");
-#endif
             part = Int32.Parse(args[0]);
             username = args[1];
             password = args[2];
             Generator.Generator.generateAndWrite(part.ToString(), username, password);
             Cracker.Cracker cracker = new Cracker.Cracker();
-            cracker.Crack(args[0]);
+            Console.WriteLine("Cracking...");
+            var crackerResult = cracker.Crack(args[0], args[3]);
+            Console.WriteLine("Done.");
+            Console.WriteLine($"Password: {crackerResult.password}");
+            Console.WriteLine($"Number of tries: {crackerResult.tries}.");
+            Console.WriteLine($"Time Elapsed: {crackerResult.timeSpan.ToString()}");
+#if DEBUG
+            Console.ReadKey();
+#endif
         }
     }
 }

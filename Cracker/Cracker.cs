@@ -5,38 +5,80 @@ using Generator;
 
 namespace Cracker {
     public class Cracker {
-        public Cracker() {
-        }
         static void Main(String[] args) {
             string part = args[0];
             Cracker cracker = new Cracker();
-            cracker.Crack(part);
+            Console.WriteLine("Cracking...");
+            var crackerResult = cracker.Crack(part);
+            Console.WriteLine("Done.");
+            Console.WriteLine($"Password: {crackerResult.password}");
+            Console.WriteLine($"Number of tries: {crackerResult.tries}.");
+            Console.WriteLine($"Time Elapsed: {crackerResult.timeSpan.ToString()}");
+#if DEBUG
+            Console.ReadKey();
+#endif
         }
         private int tries = 0;
-        public void Crack(string _part) {
+        public class CrackResult {
+            public String kind { get; }
+            public int tries { get; }
+            public String password { get; }
+            public TimeSpan timeSpan { get;  }
+            public CrackResult(String _kind, int _tries, String _password, TimeSpan _timeSpan) {
+                this.kind = _kind;
+                this.tries = _tries;
+                this.password = _password;
+                this.timeSpan = _timeSpan;
+            }
+        }
+        public CrackResult Crack(string _part) {
+            var startTime = DateTime.Now;
             tries = 0;
             try {
                 int part;
                 if (!Int32.TryParse(_part, out part)) {
                     throw new Exception("Part number is invalid");
                 }
-                string fileName = $"../../part{part}.txt";
+                string fileName = $"../../../../Generator/bin/Debug/netcoreapp2.1/part{part}.txt";
                 string[] fileContents = File.ReadAllText(fileName).Trim('[', ']').Split(',');
-                string salt = fileContents[1];
-                string hash = fileContents[2];
+
+                string salt = fileContents[1].Trim();
+                string hash = fileContents[2].Trim();
                 string password = "";
-                int maxCount = 0;
+
                 int minLength = 2;
                 int maxLength = 5;
+                int maxCount = computeLength(charSet[part - 1].Length, minLength, maxLength);
+
                 List<int> currentIndicies = new List<int>();
-                maxCount = computeLength(charSet[part].Length, minLength, maxLength);
-                foreach (int key in charSet[part]) {
-                    currentIndicies.Add(0);
+                currentIndicies.Add(0);
+                string computedHash = "";
+                bool found = false;
+                while (!found) {
+                    computedHash = Generator.Generator.hash(password + salt);
+                    if (computedHash == hash) {
+                        found = true;
+                    } else {
+                        if (tries > maxCount) {
+                            throw new Exception("Couldn't crack the password with the characters provided.");
+                        }
+                        string nextPassword = getNewPassword(password, part, currentIndicies);
+                        if (nextPassword == password) {
+                            // nothing has changed, add another digit
+                            int length = currentIndicies.Count;
+                            currentIndicies = new List<int>();
+                            for (int i = 0; i <= length; i++) {
+                                currentIndicies.Add(0);
+                            }
+                            nextPassword = "";
+                        }
+                        password = nextPassword;
+                        tries++;
+                    }
                 }
-                while ((Generator.Generator.hash(password + salt) != hash) || (tries <= maxCount)) {
-                    password = getNewPassword(password, part, currentIndicies);
-                    tries++;
-                }
+                var endTime = DateTime.Now;
+                var timeDifference = endTime - startTime;
+                return new CrackResult("Success", tries, password, timeDifference);
             } catch (IndexOutOfRangeException e) {
                 Console.WriteLine("Provide a file crack via command line.");
                 Console.WriteLine("Format is <filename>");
@@ -47,6 +89,7 @@ namespace Cracker {
             } catch (OverflowException e) {
                 throw new FormatException("Part number is invalid");
             }
+            return new CrackResult("Failure", 0, null, new TimeSpan());
         }
         private static string upperCaseString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private static string lowerCaseString = upperCaseString.ToLower();
@@ -58,19 +101,22 @@ namespace Cracker {
         private static char[] part4Keys = (specials + numbers + upperCaseString + lowerCaseString).ToCharArray();
         private static char[][] charSet = { part1Keys, part2Keys, part3Keys, part4Keys };
         private string getNewPassword(string currentPassword, int part, List<int> currentIndicies) {
-            return recurseIncrement(currentPassword, part, currentIndicies, charSet[part - 1].Length - 1);
+            if (currentPassword == "") {
+                return computePasswordFromIndicies(part, currentIndicies);
+            } else {
+                return recurseIncrement(currentPassword, part, currentIndicies, currentIndicies.Count - 1);
+            }
         }
         private string recurseIncrement(string currentPassword, int part, List<int> currentIndicies, int index) {
-            if (currentPassword[currentIndicies[index]] != charSet[part - 1][charSet[part - 1].Length - 1]) {
+            int lastCharIndex = charSet[part - 1].Length - 1;
+            char lastChar = charSet[part - 1][lastCharIndex];
+            // If we don't need to carry
+            if (currentPassword[index] != lastChar) {
                 currentIndicies[index]++;
-                string result = "";
-                foreach (int i in currentIndicies) {
-                    result += charSet[part - 1][index];
-                }
-                return result;
+                return computePasswordFromIndicies(part, currentIndicies);
             } else {
                 if (index == 0) {
-                    throw new OverflowException("Password " + currentPassword + " is overflowing");
+                    return currentPassword;
                 } else {
                     currentIndicies[index] = 0;
                     index--;
@@ -78,7 +124,14 @@ namespace Cracker {
                 }
             }
         }
-        private static int computeLength(int keysLength, int max, int min) {
+        private string computePasswordFromIndicies(int part, List<int> currentIndicies) {
+            string result = "";
+            foreach (int i in currentIndicies) {
+                result += charSet[part - 1][i];
+            }
+            return result;
+        }
+        private static int computeLength(int keysLength, int min, int max) {
             int maxCount = 0;
             for (int i = min; i <= max; i++) {
                 maxCount += (int)Math.Pow(keysLength, i);

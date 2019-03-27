@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Demo": {
+      "commandName": "Project"
+    },
+    "part1": {
+      "commandName": "Project",
+      "commandLineArgs": "1 alec test"
+    }
+  }
+}

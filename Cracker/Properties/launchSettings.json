@@ -6,6 +6,18 @@
     "part1": {
       "commandName": "Project",
       "commandLineArgs": "1"
+    },
+    "part2": {
+      "commandName": "Project",
+      "commandLineArgs": "2"
+    },
+    "part3": {
+      "commandName": "Project",
+      "commandLineArgs": "3"
+    },
+    "part4": {
+      "commandName": "Project",
+      "commandLineArgs": "4"
     }
   }
 }

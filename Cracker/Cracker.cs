@@ -20,7 +20,7 @@ namespace Cracker {
                 if (!Int32.TryParse(_part, out part)) {
                     throw new Exception("Part number is invalid");
                 }
-                string fileName = $"part{part}.txt";
+                string fileName = $"../../part{part}.txt";
                 string[] fileContents = File.ReadAllText(fileName).Trim('[', ']').Split(',');
                 string salt = fileContents[1];
                 string hash = fileContents[2];
